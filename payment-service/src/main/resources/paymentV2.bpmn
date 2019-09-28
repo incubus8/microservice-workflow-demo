@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="definitions_778a0afa-7ad6-4e9c-ae69-9695f28c2945" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" exporter="Camunda Modeler" exporterVersion="3.1.2">
+  <process id="paymentV2" isExecutable="true">
+    <startEvent id="startEvent_8689b625-9d32-4f78-86e5-89e5b4631e51">
+      <outgoing>sequenceFlow_a3939b7a-6da7-40bd-a2d0-b2d541e8de79</outgoing>
+    </startEvent>
+    <serviceTask id="briapi" name="Charge Debit Card" camunda:type="external" camunda:topic="paymentV2">
+      <incoming>sequenceFlow_a3939b7a-6da7-40bd-a2d0-b2d541e8de79</incoming>
+      <outgoing>sequenceFlow_023dd506-8ef9-48c2-a006-80c717940524</outgoing>
+    </serviceTask>
+    <sequenceFlow id="sequenceFlow_a3939b7a-6da7-40bd-a2d0-b2d541e8de79" sourceRef="startEvent_8689b625-9d32-4f78-86e5-89e5b4631e51" targetRef="briapi" />
+    <endEvent id="endEvent_6bb6c4d4-c365-40a4-b521-a2e034bfff95">
+      <incoming>sequenceFlow_023dd506-8ef9-48c2-a006-80c717940524</incoming>
+    </endEvent>
+    <sequenceFlow id="sequenceFlow_023dd506-8ef9-48c2-a006-80c717940524" sourceRef="briapi" targetRef="endEvent_6bb6c4d4-c365-40a4-b521-a2e034bfff95" />
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_b881d42b-59f7-43e2-8e70-e1b846eeee01">
+    <bpmndi:BPMNPlane id="BPMNPlane_3a5a471c-ce19-4f10-8442-223f203c1e68" bpmnElement="paymentV2">
+      <bpmndi:BPMNShape id="BPMNShape_c5e4f014-39f9-4b40-9afd-cbdc500bd368" bpmnElement="startEvent_8689b625-9d32-4f78-86e5-89e5b4631e51">
+        <dc:Bounds x="156" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ab95835d-44e4-40ca-be57-32b4fe4f8ad0" bpmnElement="briapi">
+        <dc:Bounds x="242" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_21f4e711-4b6b-4371-a0d3-205b7436742d" bpmnElement="sequenceFlow_a3939b7a-6da7-40bd-a2d0-b2d541e8de79">
+        <di:waypoint x="192" y="118" />
+        <di:waypoint x="242" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_f99dbebf-258e-470f-ad9a-68babf5db3d4" bpmnElement="endEvent_6bb6c4d4-c365-40a4-b521-a2e034bfff95">
+        <dc:Bounds x="392" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_7287c140-2d41-4dff-b627-1d1b2c0c499f" bpmnElement="sequenceFlow_023dd506-8ef9-48c2-a006-80c717940524">
+        <di:waypoint x="342" y="118" />
+        <di:waypoint x="392" y="118" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="definitions_fd877462-aef0-48ca-9211-0b5731908c10" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" exporter="Camunda Modeler" exporterVersion="3.1.2">
+  <process id="paymentV3" isExecutable="true">
+    <startEvent id="startEvent_17922f76-8653-4320-8938-82db11a13181">
+      <outgoing>sequenceFlow_e816bb53-6b18-4cf1-a372-8c7c94c4b95d</outgoing>
+    </startEvent>
+    <serviceTask id="briapi" name="BRIAPI" camunda:type="external" camunda:topic="paymentV3">
+      <extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </extensionElements>
+      <incoming>sequenceFlow_e816bb53-6b18-4cf1-a372-8c7c94c4b95d</incoming>
+      <outgoing>sequenceFlow_dad84ec1-8634-4462-a7ed-2d5689a84ab8</outgoing>
+    </serviceTask>
+    <sequenceFlow id="sequenceFlow_e816bb53-6b18-4cf1-a372-8c7c94c4b95d" sourceRef="startEvent_17922f76-8653-4320-8938-82db11a13181" targetRef="briapi" />
+    <boundaryEvent id="noRetries" name="No Retries" attachedToRef="briapi">
+      <outgoing>sequenceFlow_f2903243-1ef0-4c10-8dde-2dcd0ba1af94</outgoing>
+      <errorEventDefinition id="errorEventDefinition_300f6a72-202d-4cdb-b4ff-954b6686fe1e" errorRef="error_e2cd7f49-0afb-4087-a85a-1452fc77c50b" />
+    </boundaryEvent>
+    <serviceTask id="briapiCancel" name="BRIAPI Cancel" camunda:type="external" camunda:topic="paymentV3cancel">
+      <extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </extensionElements>
+      <incoming>sequenceFlow_f2903243-1ef0-4c10-8dde-2dcd0ba1af94</incoming>
+      <outgoing>sequenceFlow_e883fe0a-5ae9-4610-8fa0-565b36cb21e6</outgoing>
+    </serviceTask>
+    <sequenceFlow id="sequenceFlow_f2903243-1ef0-4c10-8dde-2dcd0ba1af94" sourceRef="noRetries" targetRef="briapiCancel" />
+    <endEvent id="endEvent_e5e79687-2a27-4c8e-9ba7-9b18c2173a98">
+      <incoming>sequenceFlow_e883fe0a-5ae9-4610-8fa0-565b36cb21e6</incoming>
+    </endEvent>
+    <sequenceFlow id="sequenceFlow_e883fe0a-5ae9-4610-8fa0-565b36cb21e6" sourceRef="briapiCancel" targetRef="endEvent_e5e79687-2a27-4c8e-9ba7-9b18c2173a98" />
+    <endEvent id="endEvent_9dd24342-b6d5-4ab5-b9c0-a3012c1b6a6d">
+      <extensionElements>
+        <camunda:executionListener class="id.co.bri.demo.adapter.NotifySemaphorAdapter" event="start" />
+      </extensionElements>
+      <incoming>sequenceFlow_dad84ec1-8634-4462-a7ed-2d5689a84ab8</incoming>
+    </endEvent>
+    <sequenceFlow id="sequenceFlow_dad84ec1-8634-4462-a7ed-2d5689a84ab8" sourceRef="briapi" targetRef="endEvent_9dd24342-b6d5-4ab5-b9c0-a3012c1b6a6d" />
+  </process>
+  <error id="error_e2cd7f49-0afb-4087-a85a-1452fc77c50b" name="No More Retry" errorCode="Error_NoRetries" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_62ce75b3-0216-4cb0-8135-b02253e4c9fd">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2cf7c2b-f4f8-43b4-a5b3-9a215d3a0a5b" bpmnElement="paymentV3">
+      <bpmndi:BPMNShape id="BPMNShape_8ccd0eda-3e25-4cb6-82d7-b873ed7f7714" bpmnElement="startEvent_17922f76-8653-4320-8938-82db11a13181">
+        <dc:Bounds x="156" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_fea1f899-7785-49a0-b1aa-0698f1abc13c" bpmnElement="briapi">
+        <dc:Bounds x="242" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_8039e97f-f301-4cba-8999-ea44ddfd4580" bpmnElement="sequenceFlow_e816bb53-6b18-4cf1-a372-8c7c94c4b95d">
+        <di:waypoint x="192" y="118" />
+        <di:waypoint x="242" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_70c7da7d-1123-4bff-96df-283c25f39292" bpmnElement="noRetries">
+        <dc:Bounds x="274" y="140" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="229" y="175" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_d58f3263-95a5-4dc0-ab26-120f09e4bd9f" bpmnElement="briapiCancel">
+        <dc:Bounds x="323" y="186" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_a7472472-8d18-4d6a-9ab4-0ec0d41f62b6" bpmnElement="sequenceFlow_f2903243-1ef0-4c10-8dde-2dcd0ba1af94">
+        <di:waypoint x="292" y="176" />
+        <di:waypoint x="292" y="226" />
+        <di:waypoint x="322.5" y="226" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_9dd378b7-6c3d-4b7b-8a21-81f0e6465fde" bpmnElement="endEvent_e5e79687-2a27-4c8e-9ba7-9b18c2173a98">
+        <dc:Bounds x="473" y="208" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_c0e3f409-88a5-4980-911f-aa15a9f3df49" bpmnElement="sequenceFlow_e883fe0a-5ae9-4610-8fa0-565b36cb21e6">
+        <di:waypoint x="422.5" y="226" />
+        <di:waypoint x="472.5" y="226" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_3dcb4cf5-3114-4dd2-a559-5c4c62f3ddd0" bpmnElement="endEvent_9dd24342-b6d5-4ab5-b9c0-a3012c1b6a6d">
+        <dc:Bounds x="392" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_40667799-1c71-4dd2-9b16-6f18de09f7ec" bpmnElement="sequenceFlow_dad84ec1-8634-4462-a7ed-2d5689a84ab8">
+        <di:waypoint x="342" y="118" />
+        <di:waypoint x="392" y="118" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

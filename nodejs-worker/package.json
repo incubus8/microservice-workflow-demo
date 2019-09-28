@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "cust-debit-worker",
+  "description": "A camunda external task / worker NodeJS example",
+  "version": "0.0.1",
+  "dependencies": {
+    "camunda-external-task-client-js": "^1.0.0",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.7"
+  }
+}
